@@ -5,7 +5,7 @@ const app = express()
 const http = require('http').Server(app)
 const port = process.env.PORT || 3000
 const axios = require('axios')
-const api_key = 'd9e2a78a333fcaa11a93dd2dd1155edf'
+const api_key = process.env.API_KEY
 const base_url = 'http://api.openweathermap.org/data/2.5/weather'
 
 let homePage = __dirname + '/index.html'
