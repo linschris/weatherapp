@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WeatherApp</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;900&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div id="weather-info" class="weather-icon-info">
+    </div>
+    <div id="sun-information">
+    </div>
+    <div class="current-time-date">
+        <div id="currentDate"></div>
+        <div id="currentTime"></div>
+    </div>
+    <div id="city-name-title" class="current-weather-details"></div>
+    <div id="current-temp" class="current-weather-details"></div>
+    <div id="temp-high-low" class="current-weather-details"></div>
+    <form id="weather-search-form">
+        <input type="text" placeholder="Search" id="city-name-box">
+        <button type="button" onclick="submitCityName()" id="city-button"><i class="fa fa-search"></i></button>
+    </form>
+    
+
+
+</body>
+<script defer src="/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+</html>

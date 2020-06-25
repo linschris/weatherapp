@@ -1,0 +1,159 @@
+
+/* font-family: 'Montserrat', sans-serif;
+font-family: 'Roboto', sans-serif; */
+
+body {
+    background-color: #FFF;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+    /* background-color: #363550;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 6%, rgba(54,53,80,1) 42%, rgba(147,147,159,1) 95%, rgba(147,147,159,1) 100%); */
+    background-image: url("firewatch.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.weather-icon-info {
+    position: absolute;
+    width: 15vw;
+    height: 10vh;
+    left: 1.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: rgb(226, 226, 226);
+    opacity: 0;
+    
+}
+
+
+.current-time-date {
+    position: absolute;
+    width: 20vw;
+    height: 10vh;
+    left: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: rgb(226, 226, 226);
+}
+
+
+
+.current-weather-details {
+    color: rgb(226, 226, 226);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    opacity: 0;
+}
+
+#city-name-title {
+    position: absolute;
+    width: 40vw;
+    height: 5vh;
+    font-size: 70px;
+    top: 5%;
+    left: 30%;
+    text-align: center;
+}
+
+#current-temp {
+    position: absolute;
+    top: calc(20%);
+    left: calc(50% - 0.1em);
+    font-size: 40px;
+}
+#temp-high-low {
+    position: absolute;
+    top: 75%;
+    left: calc(50% - 0.5em);
+    font-size: 30px;
+}
+
+#weather-search-form {
+    position: absolute;
+    width: 40vw;
+    height: 10vh;
+    top: 50%;
+    left: calc(50% - 15vw);
+}
+#city-name-box {
+    position: relative;
+    width: 30vw;
+    height: 10vh;
+    border-radius: 3%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 30px;
+    color: white;
+    background-color: transparent;
+    border: 2px solid transparent;
+    border-bottom: 2px solid white;
+    padding: 10px;
+    padding-left: 15px;
+}
+#city-name-box::placeholder {
+    color: white;
+}
+#city-name-box:focus {
+    outline-style: none;
+    border-bottom-color: #4C7EFC;
+    outline-width: thick;
+}
+
+#city-button {
+    position: absolute;
+    background-color: #4C7EFC;
+    color: white;
+    width: 5vw;
+    height: 10vh;
+    border-radius: 20%;
+    left: 65%;
+    top: calc(50% - 3.5vh);
+    border: 2px solid transparent;
+    font-size: 35px;
+}
+
+#sun-information {
+    position: absolute;
+    left: 1%;
+    top: 12%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: rgb(226, 226, 226);
+    opacity: 0;
+}
+
+
+
+.fade-out {
+    animation: fadeout 1.5s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadein 1s linear forwards;
+}
+
+
+@keyframes fadein {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeout {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0; }
+}
