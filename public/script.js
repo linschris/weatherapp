@@ -34,6 +34,20 @@ function submitCityName() {
        console.log('COORDS:' + JSON.stringify(data.coord))
        renderData(data)
     })
+
+    //fetch for 5 day forecast
+    fetch('/five-day-forecast', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            city: city_name
+        })
+    }).then(res => res.json()).then(data => {
+        renderFiveDayData(data);
+    })
 }
 
 function fadeOutSearchBox() {
@@ -55,7 +69,7 @@ function calculateSunInfo(sunRiseTime, sunSetTime) {
     var currentHours = currentTime.getHours();
     var SRhours = sunRiseTime.getHours();
     var SShours = sunSetTime.getHours();
-    if(currentHours > SShours) {
+    if(sunRiseTime < sunSetTime) {
         var minutes = "0" + sunRiseTime.getMinutes()
         return `The next sunrise is at: ${sunRiseTime.getHours() % 12}:${minutes.substr(-2)} ${calculateAmPm(sunRiseTime.getHours())}`
     }
@@ -77,7 +91,7 @@ function renderData(data) {
     currentTemp.innerHTML = `${convertKtoF(data.main.temp)}<sup><span>°F<span><sup>`
     tempHighLow.innerHTML = `${convertKtoF(data.main.temp_max)}<sup>°F<sup>    |   ${convertKtoF(data.main.temp_min)}<sup>°F<sup>`
     cityName.innerHTML = `${data.name}, ${data.sys.country}`
-    weatherInfo.innerHTML = `<img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon not found."> Currently... ${calculateWeather(data.weather[0].description)}`
+    weatherInfo.innerHTML = `${calculateWeatherIcon(calculateWeather(data.weather[0].description))} Currently... ${calculateWeather(data.weather[0].description)}`
     sunInfo.innerHTML = `${calculateSunInfo(data.sys.sunrise, data.sys.sunset)}`
     wrapText();
     setTimeout(function() {
@@ -91,8 +105,33 @@ function renderData(data) {
 
 }
 
+function renderFiveDayData(data) {
+    console.log(data)
+    for(let i = 1; i <= 5; i++) {
+        let currentElement = document.getElementById('day'.concat(i))
+        let weatherDesc = calculateWeather(data.list[i * 4].weather[0].description)
+        let currentDay = (8 * (i-1)) + 4
+        currentElement.innerHTML = `${findCurrentDay(data.list[currentDay].dt)}: <span>${convertKtoF(data.list[currentDay].main.temp_min)}<sup>°F</sup> | ${convertKtoF(data.list[currentDay].main.temp_max)}<sup>°F</sup></span><br>${weatherDesc}  ${calculateWeatherIcon(weatherDesc)}`
+        addBackground(currentElement, weatherDesc)
+    }
+
+}
+
+function findCurrentDay(date) {
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    return days[new Date(date * 1000).getDay()]
+}
+
+function addBackground(elem, desc) {
+    if(elem.classList[1] != undefined) elem.classList.remove(elem.classList[1])
+    if(desc === 'Clear' || desc === 'Sunny') elem.classList.add('sunny')
+    if(desc === 'Cloudy') elem.classList.add('cloudy')
+    if(desc === 'Raining' || desc === 'A thunderstorm') elem.classList.add('rainy')
+    if(desc === 'Snowing' || desc === 'Foggy') elem.classList.add('snowy')
+}
+
 function wrapText() {
-    const currentTemp = new CircleType(document.getElementById("current-temp")).radius(250).dir(1);
+    const currentTemp = new CircleType(document.getElementById("current-temp")).radius(200).dir(1);
     const highLowTemp = new CircleType(document.getElementById("temp-high-low")).radius(400).dir(-1);
 }
 
@@ -104,10 +143,12 @@ function calculateWeather(description) {
         case 'few clouds':
         case 'scattered clouds':
         case 'broken clouds':
+        case 'overcast clouds':
             return 'Cloudy'
             break;
         case 'shower rain':
         case 'rain':
+        case 'light rain':
             return 'Raining'
             break;
         case 'thunderstorm':
@@ -118,6 +159,31 @@ function calculateWeather(description) {
             return 'Foggy'
         default:
             return description
+    }
+}
+function calculateWeatherIcon(description) {
+    switch(description) {
+        case 'Clear':
+        case 'Sunny':
+            return '<span class="weather-icon"><i class="fa fa-sun"></i></span>';
+            break;
+        case 'Cloudy':
+            return '<span class="weather-icon"><i class="fa fa-cloud"></i></span>';
+            break;
+        case 'Raining':
+            return '<span class="weather-icon"><i class="fa fa-cloud-rain"></i></span>';
+            break;
+        case 'A thunderstorm':
+            return '<span class="weather-icon"><i class="fa fa-bolt"></i></span>';
+            break;
+        case 'Snowing':
+            return '<span class="weather-icon"><i class="fa fa-snowflake"></i></span>';
+            break;
+        case 'Foggy':
+            return '<span class="weather-icon"><i class="fa fa-wind"></i></span>';
+            break;
+        default:
+            return 'No icon found.'
     }
 }
 

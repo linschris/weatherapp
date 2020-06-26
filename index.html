@@ -4,7 +4,7 @@
     <title>WeatherApp</title>
     <link rel="stylesheet" type="text/css" href="/stylesheet.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;900&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -23,9 +23,13 @@
         <input type="text" placeholder="Search" id="city-name-box">
         <button type="button" onclick="submitCityName()" id="city-button"><i class="fa fa-search"></i></button>
     </form>
-    
-
-
+    <div id="five-day-forecast">
+        <div id="day1" class="day-forecast"></div>
+        <div id="day2" class="day-forecast"></div>
+        <div id="day3" class="day-forecast"></div>
+        <div id="day4" class="day-forecast"></div>
+        <div id="day5" class="day-forecast"></div>
+    </div>
 </body>
 <script defer src="/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>

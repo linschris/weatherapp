@@ -13,13 +13,15 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    overflow: hidden;
 }
 
 .weather-icon-info {
     position: absolute;
     width: 15vw;
     height: 10vh;
-    left: 1.5%;
+    left: 8%;
+    top: 2%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -69,8 +71,8 @@ body {
 
 #current-temp {
     position: absolute;
-    top: calc(20%);
-    left: calc(50% - 0.1em);
+    top: calc(20% + 0.05em);
+    left: calc(50% - 0.2em);
     font-size: 40px;
 }
 #temp-high-low {
@@ -126,7 +128,7 @@ body {
 
 #sun-information {
     position: absolute;
-    left: 1%;
+    left: 6%;
     top: 12%;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
@@ -135,7 +137,58 @@ body {
     opacity: 0;
 }
 
+#five-day-forecast {
+    position: absolute;
+    width: 20vw;
+    height: 60vh;
+    border-radius: 2%;
+    top: 25%;
+    left: 5%;
+    color: transparent;
+    border: 2px solid rgb(226, 226, 226);
+    color: rgb(226, 226, 226);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
 
+.day-forecast {
+    width: 100%;
+    height: 20%;
+    padding-left: 5%;
+    padding-top: 5%;
+    padding-bottom: ;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.day-forecast span {
+    text-align: center;
+    margin-left: 25px;
+    font-size: 25px;
+}
+
+
+.weather-icon {
+    position: relative;
+    font-size: 25px;
+}
+
+.cloudy {
+    background-color: rgba(203, 199, 199, 0.3);
+}
+.rainy {
+    background-color: rgb(185, 224, 248, 0.3);
+}
+.sunny {
+    background-color: rgba(248, 240, 185, 0.3);
+}
+.snowy {
+    background-color: rgba(255, 255, 255, 0.2);
+}
 
 .fade-out {
     animation: fadeout 1.5s ease-out forwards;
@@ -156,4 +209,122 @@ body {
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 0; }
+}
+
+
+
+/* Media queries */
+
+@media (max-width: 1000px) {
+    #city-name-title {
+        font-size: 60px;
+    }
+    .weather-icon-info {
+        left:5.5%;
+    }
+}
+
+@media (max-width: 900px) {
+    #city-name-title {
+        font-size: 50px;
+    }
+    .weather-icon-info {
+        left:5.5%;
+        font-size: 15px;
+    }
+    #sun-information {
+        left: 3%;
+        font-size: 15px;
+    }
+    #city-button {
+        width: 7.5vw;
+        left: 85%;
+    }
+    #city-name-box {
+        width: 40vw;
+
+    }
+    #weather-search-form {
+        left: calc(50% - 20vw);
+    }
+}
+@media (max-width: 768px) {
+    #city-name-title {
+        font-size: 40px;
+        top: 10%;
+    }
+}
+
+@media (max-width: 500px) {
+    #city-name-title {
+        width: 70vw;
+        top: 13%;
+        left: 16%;
+        font-size: 40px;
+    }
+    .weather-icon-info {
+        width: 30vw;
+        left: 12%;
+        top: -0.5vh;
+    }
+    #sun-information {
+        left: 3%;
+        top: 10%;
+    }
+    .current-time-date {
+        font-size: 15px;
+        width: 40vw;
+        left: 60%;
+    }
+    #current-temp {
+        top: calc(20% + 0.2em);
+    }
+    #city-name-box {
+        width: 50vw;
+    }
+    #weather-search-form {
+        left: calc(50% - 30vw);
+    }
+    #city-button {
+        width: 7.5vw;
+        left: 85%;
+        background-color: transparent;
+    }
+}
+
+@media (max-width: 400px) {
+    #city-name-title {
+        width: 70vw;
+        top: 13%;
+        left: 17%;
+        font-size: 40px;
+    }
+    .weather-icon-info {
+        width: 30vw;
+        left: 12%;
+        top: -0.5vh;
+    }
+    #sun-information {
+        left: 3%;
+        top: 9%;
+    }
+    .current-time-date {
+        font-size: 15px;
+        width: 40vw;
+        left: 60%;
+    }
+    #current-temp {
+        top: calc(20% + 0.2em);
+    }
+    #city-name-box {
+        width: 50vw;
+    }
+    #weather-search-form {
+        left: calc(50% - 30vw);
+    }
+    #city-button {
+        width: 7.5vw;
+        left: 85%;
+        background-color: transparent;
+    }
 }
