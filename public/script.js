@@ -1,6 +1,8 @@
 let cityNameSearchBox = document.getElementById('city-name-box')
 let searchButton = document.getElementById('city-button')
 let weatherSearchForm = document.getElementById('weather-search-form')
+let newCityNameSearchBox = document.getElementById('new-city-name-box')
+let newCityNameSearchForm = document.getElementById('new-city-search-form')
 window.onload = function() {
     setInterval(renderDateAndTime, 100)
     cityNameSearchBox.classList.add('fade-in')
@@ -13,10 +15,15 @@ weatherSearchForm.addEventListener('submit', e => {
     cityNameSearchBox.value = '';
 }, false)
 
+newCityNameSearchForm.addEventListener('submit', event => {
+    submitCityName(newCityNameSearchBox.value)
+    event.preventDefault();
+    newCityNameSearchBox.value = '';
+}, false)
 
-function submitCityName() {
-    let city_name = cityNameSearchBox.value
-    fadeOutSearchBox()
+
+function submitCityName(new_city_name) {
+    let city_name = cityNameSearchBox.value || new_city_name;
     fetch('/weather', {
         method: 'POST',
         headers: {
@@ -27,12 +34,26 @@ function submitCityName() {
             city: city_name
         })
     }).then(res => res.json()).then(data => {
+    //     console.log(data)
+    //    console.log('CURRENT TEMP:' + data.main.temp)
+    //    console.log('TEMP HIGH:' + data.main.temp_max)
+    //    console.log('TEMP LOW:' + data.main.temp_min)
+    //    console.log('COORDS:' + JSON.stringify(data.coord))
         console.log(data)
-       console.log('CURRENT TEMP:' + data.main.temp)
-       console.log('TEMP HIGH:' + data.main.temp_max)
-       console.log('TEMP LOW:' + data.main.temp_min)
-       console.log('COORDS:' + JSON.stringify(data.coord))
-       renderData(data)
+       if(data.cod !== 200) {
+           let searchBox = document.getElementById('city-name-box')
+           let errorMessage = document.getElementById('error-message')
+           if(!searchBox.classList.contains('error')) searchBox.classList.add('error')
+           errorMessage.innerHTML = 'City could not be found.'
+           searchBox.value = '';
+           console.log("ERROR TRY AGAIN")
+       }
+       else {
+        let errorMessage = document.getElementById('error-message')
+        fadeOutSearchBox()
+        errorMessage.style.display = 'none';
+        renderData(data)
+       }
     })
 
     //fetch for 5 day forecast
@@ -46,7 +67,13 @@ function submitCityName() {
             city: city_name
         })
     }).then(res => res.json()).then(data => {
-        renderFiveDayData(data);
+        console.log(data)
+        if(data.cod !== "200") {
+            console.log("ERROR TRY AGAIN.")
+        }
+        else {
+            renderFiveDayData(data)
+        }
     })
 }
 
@@ -62,20 +89,23 @@ function fadeOutSearchBox() {
     }, 1500)
 }
 
-function calculateSunInfo(sunRiseTime, sunSetTime) {
-    var sunRiseTime = new Date(sunRiseTime * 1000)
-    var sunSetTime = new Date(sunSetTime * 1000)
-    var currentTime = new Date();
-    var currentHours = currentTime.getHours();
-    var SRhours = sunRiseTime.getHours();
-    var SShours = sunSetTime.getHours();
-    if(sunRiseTime < sunSetTime) {
-        var minutes = "0" + sunRiseTime.getMinutes()
-        return `The next sunrise is at: ${sunRiseTime.getHours() % 12}:${minutes.substr(-2)} ${calculateAmPm(sunRiseTime.getHours())}`
+function calculateSunInfo(sunTime, offset, time) {
+    let localTime = new Date();
+    let localTimeZoneOffset = (localTime.getTimezoneOffset() * -1) / 60;
+    console.log(localTimeZoneOffset)
+    console.log(offset/3600)
+    let differenceInHours = Math.round(Math.abs(localTimeZoneOffset) + (offset / 3600))
+    console.log("DIFFERENCE IN HOURS: " + differenceInHours)
+    var newSunTime = new Date(sunTime * 1000)
+    var sunHours = newSunTime.getHours();
+    console.log(sunHours  + differenceInHours)
+    if(time == "sunrise") {
+        var minutes = "0" + newSunTime.getMinutes()
+        return `The next sunrise is at: ${(sunHours + differenceInHours) % 12}:${minutes.substr(-2)} ${calculateAmPm((sunHours + differenceInHours) % 12)}`
     }
     else {
-        var minutes = "0" + sunSetTime.getMinutes()
-        return `The next sunset is at: ${sunSetTime.getHours() % 12}:${minutes.substr(-2)} ${calculateAmPm(sunSetTime.getHours())}`
+        var minutes = "0" + newSunTime.getMinutes()
+        return `The next sunset is at: ${(sunHours + differenceInHours) % 12}:${minutes.substr(-2)} ${calculateAmPm((sunHours + differenceInHours))}`
     }
 }
 
@@ -88,11 +118,13 @@ function renderData(data) {
     let weatherInfo = document.getElementById('weather-info')
     let currentWeatherDetails = document.getElementsByClassName('current-weather-details')
     let sunInfo = document.getElementById("sun-information")
+    let foreCastInfo = document.getElementById("five-day-forecast")
+
     currentTemp.innerHTML = `${convertKtoF(data.main.temp)}<sup><span>°F<span><sup>`
-    tempHighLow.innerHTML = `${convertKtoF(data.main.temp_max)}<sup>°F<sup>    |   ${convertKtoF(data.main.temp_min)}<sup>°F<sup>`
+    tempHighLow.innerHTML = `${convertKtoF(data.main.temp_min)}<sup>°F<sup>    |   ${convertKtoF(data.main.temp_max)}<sup>°F<sup>`
     cityName.innerHTML = `${data.name}, ${data.sys.country}`
     weatherInfo.innerHTML = `${calculateWeatherIcon(calculateWeather(data.weather[0].description))} Currently... ${calculateWeather(data.weather[0].description)}`
-    sunInfo.innerHTML = `${calculateSunInfo(data.sys.sunrise, data.sys.sunset)}`
+    sunInfo.innerHTML = `${calculateSunInfo(data.sys.sunrise, data.timezone, "sunrise")}<br> ${calculateSunInfo(data.sys.sunset, data.timezone, "sunset")}`
     wrapText();
     setTimeout(function() {
         for(let i = 0; i < currentWeatherDetails.length; i++) {
@@ -100,6 +132,8 @@ function renderData(data) {
         }
         weatherInfo.classList.add('fade-in')
         sunInfo.classList.add('fade-in')
+        foreCastInfo.style.opacity = 1;
+        newCityNameSearchBox.classList.add('fade-in')
     }, 1500)
     
 
@@ -149,6 +183,8 @@ function calculateWeather(description) {
         case 'shower rain':
         case 'rain':
         case 'light rain':
+        case 'moderate rain':
+        case 'heavy rain':
             return 'Raining'
             break;
         case 'thunderstorm':
@@ -200,7 +236,7 @@ function renderDateAndTime() {
     let currentDate = document.getElementById('currentDate')
     currentDate.innerHTML = `${date.toLocaleString('default', { month: 'long'})} ${date.getDate()}, ${date.getUTCFullYear()}`
     let currentTime = document.getElementById('currentTime')
-    currentTime.innerHTML = `${date.getHours() % 12}:${fixMinutes(date.getMinutes())} ${calculateAmPm(date.getHours())}`
+    currentTime.innerHTML = `${date.getHours() % 12 == 0 ? 12 : date.getHours() % 12}:${fixMinutes(date.getMinutes())} ${calculateAmPm(date.getHours())}`
 }
 
 function fixMinutes(minutes) {
@@ -212,4 +248,17 @@ function calculateAmPm(hours) {
     else { return 'AM' }
 }
 
-
+function slideInOutForecast() {
+    let forecastElement = document.getElementById('five-day-forecast')
+    if(forecastElement.classList.contains('slide-in')) {
+        forecastElement.classList.remove('slide-in')
+        forecastElement.classList.add('slide-out')
+    }
+    else if(forecastElement.classList.contains('slide-out')) {
+        forecastElement.classList.remove('slide-out')
+        forecastElement.classList.add('slide-in')
+    }
+    else {
+        forecastElement.classList.add('slide-in')
+    }
+}

@@ -23,6 +23,7 @@
         <input type="text" placeholder="Search" id="city-name-box">
         <button type="button" onclick="submitCityName()" id="city-button"><i class="fa fa-search"></i></button>
     </form>
+    <div id="error-message"></div>
     <div id="five-day-forecast">
         <div id="day1" class="day-forecast"></div>
         <div id="day2" class="day-forecast"></div>
@@ -30,6 +31,12 @@
         <div id="day4" class="day-forecast"></div>
         <div id="day5" class="day-forecast"></div>
     </div>
+    <button class="current-weather-details" type="button" onclick="slideInOutForecast()" id="forecast-button">5 Day Forecast</button>
+    <form id="new-city-search-form"">
+        <input type="text" placeholder="Another city?" id="new-city-name-box">
+    </form>
+
+
 </body>
 <script defer src="/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
