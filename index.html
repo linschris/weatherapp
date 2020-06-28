@@ -31,6 +31,15 @@
         <div id="day4" class="day-forecast"></div>
         <div id="day5" class="day-forecast"></div>
     </div>
+
+    <div id="temp-slide-container">
+        <input type="range" min="1" max="100" value="50" class="slider" id="temp-slider">
+        <div class="temps">
+           <h5 id="F">°F</h5>
+           <h5 id="C">°C</h5>
+           <h5 id="K">°K</h5>  
+        </div>
+    </div>
     <button class="current-weather-details" type="button" onclick="slideInOutForecast()" id="forecast-button">5 Day Forecast</button>
     <form id="new-city-search-form"">
         <input type="text" placeholder="Another city?" id="new-city-name-box">

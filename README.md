@@ -7,7 +7,8 @@
 * Utilizing raw information
     * I transformed the information I received from the API to fit the aethestic of the web application.
 
+
 ##### Current things to think about:
-* Touching up CSS and making the web application more responsive (mobile mainly)
-* Adding more details
+* Making it responsive (The more stuff I add, the more unresponsive it gets hehe)
+
 

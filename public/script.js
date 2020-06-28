@@ -3,6 +3,12 @@ let searchButton = document.getElementById('city-button')
 let weatherSearchForm = document.getElementById('weather-search-form')
 let newCityNameSearchBox = document.getElementById('new-city-name-box')
 let newCityNameSearchForm = document.getElementById('new-city-search-form')
+let currentData = undefined;
+let currentFiveDayData = undefined;
+let tempSliderContainer = document.getElementById('temp-slide-container')
+let tempSlider = document.getElementById('temp-slider')
+let currentTempMeasure = "F";
+
 window.onload = function() {
     setInterval(renderDateAndTime, 100)
     cityNameSearchBox.classList.add('fade-in')
@@ -23,7 +29,7 @@ newCityNameSearchForm.addEventListener('submit', event => {
 
 
 function submitCityName(new_city_name) {
-    let city_name = cityNameSearchBox.value || new_city_name;
+    let city_name = new_city_name || cityNameSearchBox.value;
     fetch('/weather', {
         method: 'POST',
         headers: {
@@ -34,11 +40,6 @@ function submitCityName(new_city_name) {
             city: city_name
         })
     }).then(res => res.json()).then(data => {
-    //     console.log(data)
-    //    console.log('CURRENT TEMP:' + data.main.temp)
-    //    console.log('TEMP HIGH:' + data.main.temp_max)
-    //    console.log('TEMP LOW:' + data.main.temp_min)
-    //    console.log('COORDS:' + JSON.stringify(data.coord))
         console.log(data)
        if(data.cod !== 200) {
            let searchBox = document.getElementById('city-name-box')
@@ -46,13 +47,13 @@ function submitCityName(new_city_name) {
            if(!searchBox.classList.contains('error')) searchBox.classList.add('error')
            errorMessage.innerHTML = 'City could not be found.'
            searchBox.value = '';
-           console.log("ERROR TRY AGAIN")
        }
        else {
         let errorMessage = document.getElementById('error-message')
         fadeOutSearchBox()
         errorMessage.style.display = 'none';
         renderData(data)
+        currentData = data;
        }
     })
 
@@ -69,10 +70,11 @@ function submitCityName(new_city_name) {
     }).then(res => res.json()).then(data => {
         console.log(data)
         if(data.cod !== "200") {
-            console.log("ERROR TRY AGAIN.")
+            return;
         }
         else {
             renderFiveDayData(data)
+            currentFiveDayData = data;
         }
     })
 }
@@ -92,13 +94,9 @@ function fadeOutSearchBox() {
 function calculateSunInfo(sunTime, offset, time) {
     let localTime = new Date();
     let localTimeZoneOffset = (localTime.getTimezoneOffset() * -1) / 60;
-    console.log(localTimeZoneOffset)
-    console.log(offset/3600)
     let differenceInHours = Math.round(Math.abs(localTimeZoneOffset) + (offset / 3600))
-    console.log("DIFFERENCE IN HOURS: " + differenceInHours)
     var newSunTime = new Date(sunTime * 1000)
     var sunHours = newSunTime.getHours();
-    console.log(sunHours  + differenceInHours)
     if(time == "sunrise") {
         var minutes = "0" + newSunTime.getMinutes()
         return `The next sunrise is at: ${(sunHours + differenceInHours) % 12}:${minutes.substr(-2)} ${calculateAmPm((sunHours + differenceInHours) % 12)}`
@@ -109,9 +107,8 @@ function calculateSunInfo(sunTime, offset, time) {
     }
 }
 
-
-
-function renderData(data) {
+function renderData(data, new_temp_measure) {
+    let tempMeasure = new_temp_measure || currentTempMeasure
     let cityName = document.getElementById('city-name-title')
     let currentTemp = document.getElementById('current-temp')
     let tempHighLow = document.getElementById('temp-high-low')
@@ -119,10 +116,9 @@ function renderData(data) {
     let currentWeatherDetails = document.getElementsByClassName('current-weather-details')
     let sunInfo = document.getElementById("sun-information")
     let foreCastInfo = document.getElementById("five-day-forecast")
-
-    currentTemp.innerHTML = `${convertKtoF(data.main.temp)}<sup><span>°F<span><sup>`
-    tempHighLow.innerHTML = `${convertKtoF(data.main.temp_min)}<sup>°F<sup>    |   ${convertKtoF(data.main.temp_max)}<sup>°F<sup>`
-    cityName.innerHTML = `${data.name}, ${data.sys.country}`
+    currentTemp.innerHTML = `${calcTemp(data.main.temp, tempMeasure)}<sup><span>${"°".concat(tempMeasure)}<span><sup>`
+    tempHighLow.innerHTML = `${calcTemp(data.main.temp_min, tempMeasure)}<sup>${"°".concat(tempMeasure)}<sup>    |   ${calcTemp(data.main.temp_max, tempMeasure)}<sup>${"°".concat(tempMeasure)}<sup>`
+    cityName.innerHTML = `${data.name}, ${data.sys.country || "N/A"}`
     weatherInfo.innerHTML = `${calculateWeatherIcon(calculateWeather(data.weather[0].description))} Currently... ${calculateWeather(data.weather[0].description)}`
     sunInfo.innerHTML = `${calculateSunInfo(data.sys.sunrise, data.timezone, "sunrise")}<br> ${calculateSunInfo(data.sys.sunset, data.timezone, "sunset")}`
     wrapText();
@@ -134,18 +130,32 @@ function renderData(data) {
         sunInfo.classList.add('fade-in')
         foreCastInfo.style.opacity = 1;
         newCityNameSearchBox.classList.add('fade-in')
+        tempSliderContainer.classList.add('fade-in')
     }, 1500)
     
 
 }
 
-function renderFiveDayData(data) {
-    console.log(data)
+function calcTemp(datapoint, tempMeasure) {
+    if(tempMeasure == "K") {
+        return (datapoint).toFixed(2)
+    }
+    else if(tempMeasure == "C") {
+        return convertKtoC(datapoint)
+    }
+    else { 
+        return convertKtoF(datapoint)
+    }
+}
+
+
+function renderFiveDayData(data, new_temp_measure) {
+    let tempMeasure = new_temp_measure || currentTempMeasure
     for(let i = 1; i <= 5; i++) {
         let currentElement = document.getElementById('day'.concat(i))
         let weatherDesc = calculateWeather(data.list[i * 4].weather[0].description)
         let currentDay = (8 * (i-1)) + 4
-        currentElement.innerHTML = `${findCurrentDay(data.list[currentDay].dt)}: <span>${convertKtoF(data.list[currentDay].main.temp_min)}<sup>°F</sup> | ${convertKtoF(data.list[currentDay].main.temp_max)}<sup>°F</sup></span><br>${weatherDesc}  ${calculateWeatherIcon(weatherDesc)}`
+        currentElement.innerHTML = `${findCurrentDay(data.list[currentDay].dt)}: <span>${calcTemp(data.list[currentDay].main.temp_min, tempMeasure)}<sup>${"°".concat(tempMeasure)}</sup> | ${calcTemp(data.list[currentDay].main.temp_max, tempMeasure)}<sup>${"°".concat(tempMeasure)}</sup></span><br>${weatherDesc}  ${calculateWeatherIcon(weatherDesc)}`
         addBackground(currentElement, weatherDesc)
     }
 
@@ -226,10 +236,10 @@ function calculateWeatherIcon(description) {
 function convertKtoF(kelvin) {
     if(kelvin != null) return ((kelvin - 273.15) * 9/5 + 32).toFixed(2)
 }
-
-function convertFtoC(fahr) {
-    if(fahr != null) return ((5/9 * fahr) - 32).toFixed(2)
+function convertKtoC(kelvin) {
+    if(kelvin != null) return (kelvin - 273.15).toFixed(2)
 }
+
 
 function renderDateAndTime() {
     let date = new Date();
@@ -262,3 +272,24 @@ function slideInOutForecast() {
         forecastElement.classList.add('slide-in')
     }
 }
+
+
+
+tempSlider.onchange = function() {
+    if(tempSlider.value <= 33) {
+        currentTempMeasure = "F";
+        renderData(currentData, "F")
+        renderFiveDayData(currentFiveDayData, "F")
+    }
+    else if(tempSlider.value <= 66) {
+        currentTempMeasure = "C";
+        renderData(currentData, "C")
+        renderFiveDayData(currentFiveDayData, "C")
+    }
+    else {
+        currentTempMeasure = "K";
+        renderData(currentData, "K")
+        renderFiveDayData(currentFiveDayData, "K")
+    }
+}
+
