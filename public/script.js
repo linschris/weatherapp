@@ -5,6 +5,7 @@ let newCityNameSearchBox = document.getElementById('new-city-name-box')
 let newCityNameSearchForm = document.getElementById('new-city-search-form')
 let newCityNameSearchBoxMobile = document.getElementById('new-city-name-box-mobile')
 let newCityNameSearchFormMobile = document.getElementById('new-city-search-form-mobile')
+let mobileNavBar = document.getElementById('mobile-phone-nav-bar')
 let currentData = undefined;
 let currentFiveDayData = undefined;
 let tempSliderContainer = document.getElementById('temp-slide-container')
@@ -136,6 +137,7 @@ function renderData(data, new_temp_measure) {
         }
         weatherInfo.classList.add('fade-in')
         sunInfo.classList.add('fade-in')
+        mobileNavBar.classList.add('fade-in')
         foreCastInfo.style.opacity = 1;
         newCityNameSearchBox.classList.add('fade-in')
         tempSliderContainer.classList.add('fade-in')

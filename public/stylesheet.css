@@ -596,6 +596,7 @@ body {
 }
 
 @media (max-width: 450px) {
+    
     #city-name-title {
         width: 70vw;
         top: 13%;

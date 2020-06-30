@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/stylesheet.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;900&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0; maximum-scale=1; user-scalable=0;">
 </head>
 <body>
     <div id="weather-info" class="weather-icon-info">
@@ -45,7 +45,7 @@
         <input type="text" placeholder="Another city?" id="new-city-name-box">
     </form>
 
-    <div id="mobile-phone-nav-bar" class="phone-nav-bar" style="">
+    <div id="mobile-phone-nav-bar" class="phone-nav-bar" style="opacity: 0;">
         <button type="button" onclick="slideInOutForecast()" id="forecast-button-mobile" class="phone-nav-bar"><i class="fas fa-chart-line mobile-icon" id="graph-line-icon"></i><br>5 Day Forecast</button>
         <button type="button" onclick="openCityBox()" id="new-city-button-mobile" class="phone-nav-bar"><i class="fas fa-city mobile-icon" id="new-city-icon"></i><br>New City</button>
         <button type="button" onclick="openTempMeasure()" id="temp-slide-button-mobile" class="phone-nav-bar"><i class="fas fa-temperature-high mobile-icon"></i><br>Temperature</button>
