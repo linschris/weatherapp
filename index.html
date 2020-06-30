@@ -45,6 +45,14 @@
         <input type="text" placeholder="Another city?" id="new-city-name-box">
     </form>
 
+    <div id="mobile-phone-nav-bar" class="phone-nav-bar" style="">
+        <button type="button" onclick="slideInOutForecast()" id="forecast-button-mobile" class="phone-nav-bar"><i class="fas fa-chart-line mobile-icon" id="graph-line-icon"></i><br>5 Day Forecast</button>
+        <button type="button" onclick="openCityBox()" id="new-city-button-mobile" class="phone-nav-bar"><i class="fas fa-city mobile-icon" id="new-city-icon"></i><br>New City</button>
+        <button type="button" onclick="openTempMeasure()" id="temp-slide-button-mobile" class="phone-nav-bar"><i class="fas fa-temperature-high mobile-icon"></i><br>Temperature</button>
+    </div>
+    <form id="new-city-search-form-mobile">
+        <input type="text" placeholder="Type in a new city" id="new-city-name-box-mobile">
+    </form>
 
 </body>
 <script defer src="/script.js"></script>

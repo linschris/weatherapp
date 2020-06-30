@@ -3,6 +3,8 @@ let searchButton = document.getElementById('city-button')
 let weatherSearchForm = document.getElementById('weather-search-form')
 let newCityNameSearchBox = document.getElementById('new-city-name-box')
 let newCityNameSearchForm = document.getElementById('new-city-search-form')
+let newCityNameSearchBoxMobile = document.getElementById('new-city-name-box-mobile')
+let newCityNameSearchFormMobile = document.getElementById('new-city-search-form-mobile')
 let currentData = undefined;
 let currentFiveDayData = undefined;
 let tempSliderContainer = document.getElementById('temp-slide-container')
@@ -23,6 +25,12 @@ weatherSearchForm.addEventListener('submit', e => {
 
 newCityNameSearchForm.addEventListener('submit', event => {
     submitCityName(newCityNameSearchBox.value)
+    event.preventDefault();
+    newCityNameSearchBox.value = '';
+}, false)
+
+newCityNameSearchFormMobile.addEventListener('submit', event => {
+    submitCityName(newCityNameSearchBoxMobile.value)
     event.preventDefault();
     newCityNameSearchBox.value = '';
 }, false)
@@ -167,11 +175,12 @@ function findCurrentDay(date) {
 }
 
 function addBackground(elem, desc) {
+    let randomNumber = Math.round(Math.random() * 1 + 1)
     if(elem.classList[1] != undefined) elem.classList.remove(elem.classList[1])
-    if(desc === 'Clear' || desc === 'Sunny') elem.classList.add('sunny')
-    if(desc === 'Cloudy') elem.classList.add('cloudy')
-    if(desc === 'Raining' || desc === 'A thunderstorm') elem.classList.add('rainy')
-    if(desc === 'Snowing' || desc === 'Foggy') elem.classList.add('snowy')
+    if(desc === 'Clear' || desc === 'Sunny') elem.classList.add('sunny'.concat(randomNumber))
+    if(desc === 'Cloudy') elem.classList.add('cloudy'.concat(randomNumber))
+    if(desc === 'Raining' || desc === 'A thunderstorm') elem.classList.add('rainy'.concat(randomNumber))
+    if(desc === 'Snowing' || desc === 'Foggy') elem.classList.add('snowy'.concat(randomNumber))
 }
 
 function wrapText() {
@@ -182,12 +191,14 @@ function wrapText() {
 function calculateWeather(description) {
     switch(description) {
         case 'clear sky':
+        case (description.indexOf('clear') != -1):
             return 'Clear'
             break;
         case 'few clouds':
         case 'scattered clouds':
         case 'broken clouds':
         case 'overcast clouds':
+        case (description.indexOf('cloud') != -1):
             return 'Cloudy'
             break;
         case 'shower rain':
@@ -195,13 +206,17 @@ function calculateWeather(description) {
         case 'light rain':
         case 'moderate rain':
         case 'heavy rain':
+        case (description.indexOf('rain') != -1):
             return 'Raining'
             break;
         case 'thunderstorm':
+        case (description.indexOf('thunder') != -1):
             return 'A thunderstorm'
         case 'snow':
+        case (description.indexOf('snow') != -1):
             return 'Snowing'
         case 'mist':
+        case (description.indexOf('mist') != -1):
             return 'Foggy'
         default:
             return description
@@ -290,6 +305,29 @@ tempSlider.onchange = function() {
         currentTempMeasure = "K";
         renderData(currentData, "K")
         renderFiveDayData(currentFiveDayData, "K")
+    }
+}
+
+function openCityBox() {
+    fadeInOutElement(newCityNameSearchBoxMobile)
+    
+}
+
+function openTempMeasure() {
+    fadeInOutElement(tempSliderContainer)
+}
+
+function fadeInOutElement(elem) {
+    if(elem.classList.contains('fade-in')) {
+        elem.classList.remove('fade-in')
+        elem.classList.add('fade-out')
+    }
+    else if(newCityNameSearchBoxMobile.classList.contains('fade-out')) {
+        elem.classList.remove('fade-out')
+        elem.classList.add('fade-in')
+    }
+    else {
+        elem.classList.add('fade-in')
     }
 }
 
